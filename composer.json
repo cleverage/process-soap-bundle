@@ -1,0 +1,33 @@
+{
+    "name": "cleverage/process-soap-bundle",
+    "description": "SOAP extension for CleverAge/ProcessBundle",
+    "keywords": [
+        "process",
+        "task",
+        "etl",
+        "transformation",
+        "import",
+        "export",
+        "soap"
+    ],
+    "homepage": "https://github.com/cleverage/process-soap-bundle",
+    "type": "library",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Madeline Veyrenc",
+            "email": "mveyrenc@clever-age.com",
+            "role": "Lead Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "CleverAge\\ProcessSoapBundle\\": ""
+        }
+    },
+    "require": {
+        "php": ">=7.0",
+        "symfony/symfony": "^3.0",
+        "cleverage/process-bundle": "^1.0"
+    }
+}
