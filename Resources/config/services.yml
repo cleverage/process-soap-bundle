@@ -1,0 +1,7 @@
+parameters:
+    clever_age_process_soap.soap_client.class: CleverAge\ProcessSoapBundle\Soap\Client\Client
+
+services:
+#    clever_age_process_soap.example:
+#        class: CleverAge\ProcessSoapBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
