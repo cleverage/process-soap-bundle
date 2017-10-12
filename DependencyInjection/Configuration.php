@@ -41,7 +41,7 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('key')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('wsdl')->isRequired()->end()
+                            ->scalarNode('wsdl')->end()
                             ->append($this->getSoapClientConfiguration())
                             ->scalarNode('service_alias')->defaultNull()->end()
                             ->scalarNode('class')->defaultValue('%clever_age_process_soap.soap_client.class%')->end()

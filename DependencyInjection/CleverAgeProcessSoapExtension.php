@@ -48,7 +48,9 @@ class CleverAgeProcessSoapExtension extends Extension
             $definition->addTag('clever_age_process_soap.base_soap');
             $definition->addTag('clever_age_process_soap.client');
 
-            $definition->addMethodCall('setWsdl', [$client['wsdl']]);
+            if (array_key_exists('wsdl', $client)) {
+                $definition->addMethodCall('setWsdl', [$client['wsdl']]);
+            }
             if (array_key_exists('options', $client)) {
                 $definition->addMethodCall('setOptions', [$client['options']]);
             }
