@@ -1,7 +1,6 @@
 <?php
-
 /*
- *    CleverAge/ProcessBundle
+ *    CleverAge/ProcessSoapBundle
  *    Copyright (C) 2017 Clever-Age
  *
  *    This program is free software: you can redistribute it and/or modify
