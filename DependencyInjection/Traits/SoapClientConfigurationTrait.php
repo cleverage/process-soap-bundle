@@ -55,7 +55,7 @@ trait SoapClientConfigurationTrait
                 ->scalarNode('encoding')->end()
                 ->scalarNode('trace')->end()
                 ->scalarNode('classmap')->end()
-                ->scalarNode('exceptions')->end()
+                ->scalarNode('exceptions')->defaultTrue()->end()
                 ->scalarNode('connection_timeout')->end()
                 ->arrayNode('typemap')
                     ->children()
