@@ -43,6 +43,7 @@ interface ClientInterface
 
     /**
      * Return the Soap client options
+     *
      * @see http://php.net/manual/en/soapclient.soapclient.php
      *
      * @return array
@@ -51,10 +52,20 @@ interface ClientInterface
 
     /**
      * Set the Soap client options
+     *
      * @see http://php.net/manual/en/soapclient.soapclient.php
      *
      * @param array $options
      * @return void
      */
     public function setOptions($options);
+
+    /**
+     * Call Soap method
+     *
+     * @param string     $method
+     * @param mixed|null $input
+     * @return mixed
+     */
+    public function call($method, $input = null);
 }

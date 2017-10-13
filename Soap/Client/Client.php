@@ -37,6 +37,11 @@ class Client implements ClientInterface
     protected $options;
 
     /**
+     * @var \SoapClient
+     */
+    protected $soapClient;
+
+    /**
      * {@inheritdoc}
      */
     public function getWsdl()
@@ -66,6 +71,33 @@ class Client implements ClientInterface
     public function setOptions($options)
     {
         $this->options = $options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function call($method, $input = null)
+    {
+        $this->initializeSoapClient();
+
+        $callMethod = sprintf('soapCall%s', ucfirst($method));
+        if (method_exists($this, $callMethod)) {
+            return $this->$callMethod($input);
+        }
+
+        return $this->soapClient->__soapCall($method, [$input]);
+    }
+
+    /**
+     * Initialize \SoapClient object
+     *
+     * @return void
+     */
+    protected function initializeSoapClient()
+    {
+        if (!$this->soapClient) {
+            $this->soapClient = new \SoapClient($this->getWsdl(), $this->getOptions());
+        }
     }
 
 }

@@ -1,0 +1,9 @@
+parameters:
+    clever_age_soap_process.task.soap_client.class: CleverAge\ProcessSoapBundle\Task\SoapClientTask
+
+services:
+    clever_age_soap_process.task.soap_client:
+        class: "%clever_age_soap_process.task.soap_client.class%"
+        shared: false
+        calls:
+            - ["setContainer", ["@service_container"]]
