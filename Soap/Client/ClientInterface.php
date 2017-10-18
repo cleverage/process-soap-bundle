@@ -63,9 +63,9 @@ interface ClientInterface
     /**
      * Call Soap method
      *
-     * @param string     $method
-     * @param mixed|null $input
+     * @param string $method
+     * @param array  $input
      * @return mixed
      */
-    public function call($method, $input = null);
+    public function call($method, array $input = []);
 }

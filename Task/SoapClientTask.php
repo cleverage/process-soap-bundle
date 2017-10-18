@@ -51,7 +51,8 @@ class SoapClientTask extends AbstractConfigurableTask implements TaskInterface
         if ($this->container->has($serviceName)) {
             /** @var ClientInterface $service */
             $service = $this->container->get($serviceName);
-            $result = $service->call($options['method'], $state->getInput());
+            $input = $state->getInput() ?: [];
+            $result = $service->call($options['method'], $input);
 
             // Handle empty results
             if (false === $result) {

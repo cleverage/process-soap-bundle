@@ -76,7 +76,7 @@ class Client implements ClientInterface
     /**
      * {@inheritdoc}
      */
-    public function call($method, $input = null)
+    public function call($method, array $input = [])
     {
         $this->initializeSoapClient();
 
