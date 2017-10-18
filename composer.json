@@ -28,7 +28,7 @@
     "require": {
         "php": ">=7.0",
         "symfony/symfony": "^3.0",
-        "cleverage/process-bundle": "^1.0",
+        "cleverage/process-bundle": "dev-master",
         "ext-soap": "*"
     }
 }
