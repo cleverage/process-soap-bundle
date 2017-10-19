@@ -6,6 +6,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -48,6 +49,7 @@ class CleverAgeProcessSoapExtension extends Extension
             $definition = new Definition($client['class']);
             $definition->addTag('clever_age_process_soap.base_soap');
             $definition->addTag('clever_age_process_soap.client');
+            $definition->addArgument(new Reference('logger'));
 
             if (array_key_exists('wsdl', $client)) {
                 $definition->addMethodCall('setWsdl', [$client['wsdl']]);
@@ -55,6 +57,8 @@ class CleverAgeProcessSoapExtension extends Extension
             if (array_key_exists('options', $client)) {
                 $definition->addMethodCall('setOptions', [$client['options']]);
             }
+
+            $definition->addMethodCall('setLogger', [$this->container->get('logger')]);
 
             $clientServiceName = sprintf('clever_age_process_soap.soap_client.%s', $key);
 

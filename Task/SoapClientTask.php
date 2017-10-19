@@ -62,7 +62,7 @@ class SoapClientTask extends AbstractConfigurableTask implements TaskInterface
                 return;
             }
 
-            $state->setOutput($result->result);
+            $state->setOutput($result);
 
             return;
         }

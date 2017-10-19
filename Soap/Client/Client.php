@@ -19,6 +19,8 @@
 
 namespace CleverAge\ProcessSoapBundle\Soap\Client;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Class Client
  *
@@ -37,9 +39,24 @@ class Client implements ClientInterface
     protected $options;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @var \SoapClient
      */
     protected $soapClient;
+
+    /**
+     * Client constructor.
+     *
+     * @param LoggerInterface $logger
+     */
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * {@inheritdoc}
@@ -85,7 +102,32 @@ class Client implements ClientInterface
             return $this->$callMethod($input);
         }
 
-        return $this->soapClient->__soapCall($method, [$input]);
+        $this->logger->notice(
+            sprintf("Soap call '%s' on '%s'", $method, $this->wsdl)
+        );
+
+        $result = null;
+
+        try {
+            $result = $this->soapClient->__soapCall($method, [$input]);
+        } catch (\SoapFault $e) {
+            $this->logger->alert(sprintf("Soap call '%s' on '%s' failed", $method, $this->wsdl));
+        }
+        if (array_key_exists('trace', $this->options) && $this->options['trace']) {
+            $trace = [
+                'LastRequest' => $this->soapClient->__getLastRequest(),
+                'LastRequestHeaders' => $this->soapClient->__getLastRequestHeaders(),
+                'LastResponse' => $this->soapClient->__getLastResponse(),
+                'LastResponseHeaders' => $this->soapClient->__getLastResponseHeaders(),
+            ];
+            $this->logger->notice(
+                sprintf("Trace of soap call '%s' on '%s'", $method, $this->wsdl),
+                $trace
+            );
+            dump($trace);
+        }
+
+        return $result;
     }
 
     /**
