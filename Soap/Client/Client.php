@@ -124,7 +124,6 @@ class Client implements ClientInterface
                 sprintf("Trace of soap call '%s' on '%s'", $method, $this->wsdl),
                 $trace
             );
-            dump($trace);
         }
 
         return $result;
