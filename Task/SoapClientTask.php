@@ -46,31 +46,48 @@ class SoapClientTask extends AbstractConfigurableTask implements TaskInterface
     public function execute(ProcessState $state)
     {
         $options = $this->getOptions($state);
+        try {
+            $serviceName = trim($options['soap_client'], '@');
+            if ($this->container->has($serviceName)) {
+                /** @var ClientInterface $service */
+                $service = $this->container->get($serviceName);
+                $input = $state->getInput() ?: [];
+                $result = $service->call($options['method'], $input);
 
-        $serviceName = trim($options['soap_client'], '@');
-        if ($this->container->has($serviceName)) {
-            /** @var ClientInterface $service */
-            $service = $this->container->get($serviceName);
-            $input = $state->getInput() ?: [];
-            $result = $service->call($options['method'], $input);
+                // Handle empty results
+                if (false === $result) {
+                    $state->log('Empty resultset for query', LogLevel::WARNING, $options['class_name'], $options);
+                    if ($options[self::ERROR_STRATEGY] === self::STRATEGY_SKIP) {
+                        $state->setSkipped(true);
+                    } elseif ($options[self::ERROR_STRATEGY] === self::STRATEGY_STOP) {
+                        $state->setStopped(true);
+                    }
 
-            // Handle empty results
-            if (false === $result) {
-                $state->log('Empty resultset for query', LogLevel::WARNING, $options['class_name'], $options);
-                $state->setStopped(true);
+                    return;
+                }
+
+                $state->setOutput($result);
 
                 return;
             }
 
-            $state->setOutput($result);
-
-            return;
+            $state->log('Soap client service not found', LogLevel::EMERGENCY, $options['soap_client'], $options);
+            if ($options[self::ERROR_STRATEGY] === self::STRATEGY_SKIP) {
+                $state->setSkipped(true);
+            } elseif ($options[self::ERROR_STRATEGY] === self::STRATEGY_STOP) {
+                $state->setStopped(true);
+            }
+        } catch (\Exception $e) {
+            $state->setError($state->getInput());
+            if ($options[self::LOG_ERRORS]) {
+                $state->log('SoapClient exception: '.$e->getMessage(), LogLevel::ERROR);
+            }
+            if ($options[self::ERROR_STRATEGY] === self::STRATEGY_SKIP) {
+                $state->setSkipped(true);
+            } elseif ($options[self::ERROR_STRATEGY] === self::STRATEGY_STOP) {
+                $state->stop($e);
+            }
         }
-
-        $state->log('Soap client service not found', LogLevel::EMERGENCY, $options['soap_client'], $options);
-        $state->setStopped(true);
-
-        return;
     }
 
     /**
