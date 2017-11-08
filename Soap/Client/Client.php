@@ -106,7 +106,7 @@ class Client implements ClientInterface
             sprintf("Soap call '%s' on '%s'", $method, $this->wsdl)
         );
 
-        $result = null;
+        $result = false;
 
         try {
             $result = $this->soapClient->__soapCall($method, [$input]);
