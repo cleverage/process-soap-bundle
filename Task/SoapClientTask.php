@@ -56,7 +56,7 @@ class SoapClientTask extends AbstractConfigurableTask implements TaskInterface
 
                 // Handle empty results
                 if (false === $result) {
-                    $state->log('Empty resultset for query', LogLevel::WARNING, $options['class_name'], $options);
+                    $state->log('Empty resultset for query', LogLevel::WARNING, $options['soap_client'], $options);
                     if ($options[self::ERROR_STRATEGY] === self::STRATEGY_SKIP) {
                         $state->setSkipped(true);
                     } elseif ($options[self::ERROR_STRATEGY] === self::STRATEGY_STOP) {
