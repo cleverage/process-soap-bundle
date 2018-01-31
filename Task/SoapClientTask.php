@@ -28,10 +28,10 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Fetch entities from doctrine
+ * Class SoapClientTask
  *
- * @author Valentin Clavreul <vclavreul@clever-age.com>
- * @author Vincent Chalnot <vchalnot@clever-age.com>
+ * @package CleverAge\ProcessSoapBundle\Task
+ * @author  Madeline Veyrenc <mveyrenc@clever-age.com>
  */
 class SoapClientTask extends AbstractConfigurableTask implements TaskInterface
 {
@@ -56,7 +56,18 @@ class SoapClientTask extends AbstractConfigurableTask implements TaskInterface
 
                 // Handle empty results
                 if (false === $result) {
-                    $state->log('Empty resultset for query', LogLevel::WARNING, $options['soap_client'], $options);
+                    $state->log(
+                        'Empty resultset for query',
+                        LogLevel::WARNING,
+                        $options['soap_client'],
+                        [
+                            'options' => $options,
+                            'lastRequest' => $service->getLastRequest(),
+                            'lastRequestHeaders' => $service->getLastRequestHeaders(),
+                            'lastResponse' => $service->getLastResponse(),
+                            'lastResponseHeaders' => $service->getLastResponseHeaders(),
+                        ]
+                    );
                     if ($options[self::ERROR_STRATEGY] === self::STRATEGY_SKIP) {
                         $state->setSkipped(true);
                     } elseif ($options[self::ERROR_STRATEGY] === self::STRATEGY_STOP) {
