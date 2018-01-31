@@ -49,6 +49,26 @@ class Client implements ClientInterface
     protected $soapClient;
 
     /**
+     * @var string
+     */
+    protected $lastRequest;
+
+    /**
+     * @var string
+     */
+    protected $lastRequestHeaders;
+
+    /**
+     * @var string
+     */
+    protected $lastResponse;
+
+    /**
+     * @var string
+     */
+    protected $lastResponseHeaders;
+
+    /**
      * Client constructor.
      *
      * @param LoggerInterface $logger
@@ -79,7 +99,7 @@ class Client implements ClientInterface
      */
     public function getOptions()
     {
-        return $this->options;
+        return array_merge($this->options, ['trace' => true]);
     }
 
     /**
@@ -88,6 +108,38 @@ class Client implements ClientInterface
     public function setOptions($options)
     {
         $this->options = $options;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastRequest()
+    {
+        return $this->lastRequest;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastRequestHeaders()
+    {
+        return $this->lastRequestHeaders;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastResponse()
+    {
+        return $this->lastResponse;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastResponseHeaders()
+    {
+        return $this->lastResponseHeaders;
     }
 
     /**
@@ -106,6 +158,16 @@ class Client implements ClientInterface
             sprintf("Soap call '%s' on '%s'", $method, $this->wsdl)
         );
 
+        return $this->doSoapCall($method, $input);
+    }
+
+    /**
+     * @param string $method
+     * @param array  $input
+     * @return bool|mixed
+     */
+    protected function doSoapCall($method, array $input = [])
+    {
         $result = false;
 
         try {
@@ -113,12 +175,18 @@ class Client implements ClientInterface
         } catch (\SoapFault $e) {
             $this->logger->alert(sprintf("Soap call '%s' on '%s' failed", $method, $this->wsdl));
         }
+
+        $this->lastRequest = $this->soapClient->__getLastRequest();
+        $this->lastRequestHeaders = $this->soapClient->__getLastRequestHeaders();
+        $this->lastResponse = $this->soapClient->__getLastResponse();
+        $this->lastResponseHeaders = $this->soapClient->__getLastResponseHeaders();
+
         if (array_key_exists('trace', $this->options) && $this->options['trace']) {
             $trace = [
-                'LastRequest' => $this->soapClient->__getLastRequest(),
-                'LastRequestHeaders' => $this->soapClient->__getLastRequestHeaders(),
-                'LastResponse' => $this->soapClient->__getLastResponse(),
-                'LastResponseHeaders' => $this->soapClient->__getLastResponseHeaders(),
+                'LastRequest' => $this->lastRequest,
+                'LastRequestHeaders' => $this->lastRequestHeaders,
+                'LastResponse' => $this->lastResponse,
+                'LastResponseHeaders' => $this->lastResponseHeaders,
             ];
             $this->logger->notice(
                 sprintf("Trace of soap call '%s' on '%s'", $method, $this->wsdl),

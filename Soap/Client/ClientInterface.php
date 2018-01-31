@@ -61,6 +61,26 @@ interface ClientInterface
     public function setOptions($options);
 
     /**
+     * @return string
+     */
+    public function getLastRequest();
+
+    /**
+     * @return string
+     */
+    public function getLastRequestHeaders();
+
+    /**
+     * @return string
+     */
+    public function getLastResponse();
+
+    /**
+     * @return string
+     */
+    public function getLastResponseHeaders();
+
+    /**
      * Call Soap method
      *
      * @param string $method
