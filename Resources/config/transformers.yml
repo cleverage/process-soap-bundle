@@ -1,0 +1,10 @@
+parameters:
+    clever_age_soap_process.transformer.soap_client.class: CleverAge\ProcessSoapBundle\Transformer\SoapClientTransformer
+
+services:
+    clever_age_soap_process.transformer.soap_client:
+        class: "%clever_age_soap_process.transformer.soap_client.class%"
+        calls:
+            - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: cleverage.transformer }
