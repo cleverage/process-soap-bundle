@@ -12,7 +12,7 @@
     ],
     "homepage": "https://github.com/cleverage/process-soap-bundle",
     "type": "library",
-    "license": "GPL-3.0",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Madeline Veyrenc",
