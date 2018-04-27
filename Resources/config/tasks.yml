@@ -5,5 +5,9 @@ services:
     clever_age_soap_process.task.soap_client:
         class: "%clever_age_soap_process.task.soap_client.class%"
         shared: false
+        arguments:
+            - '@logger'
         calls:
             - ["setContainer", ["@service_container"]]
+        tags:
+            - { name: monolog.logger, channel: cleverage_process }
