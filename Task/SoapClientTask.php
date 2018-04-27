@@ -21,7 +21,6 @@ namespace CleverAge\ProcessSoapBundle\Task;
 
 use CleverAge\ProcessBundle\Model\AbstractConfigurableTask;
 use CleverAge\ProcessBundle\Model\ProcessState;
-use CleverAge\ProcessBundle\Model\TaskInterface;
 use CleverAge\ProcessSoapBundle\Soap\Client\ClientInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -33,7 +32,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @package CleverAge\ProcessSoapBundle\Task
  * @author  Madeline Veyrenc <mveyrenc@clever-age.com>
  */
-class SoapClientTask extends AbstractConfigurableTask implements TaskInterface
+class SoapClientTask extends AbstractConfigurableTask
 {
     use ContainerAwareTrait;
 
