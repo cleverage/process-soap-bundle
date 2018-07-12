@@ -22,6 +22,7 @@ namespace CleverAge\ProcessSoapBundle\Task;
 use CleverAge\ProcessBundle\Model\AbstractConfigurableTask;
 use CleverAge\ProcessBundle\Model\ProcessState;
 use CleverAge\ProcessSoapBundle\Soap\Client\ClientInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -34,6 +35,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SoapClientTask extends AbstractConfigurableTask
 {
     use ContainerAwareTrait;
+
+    /** @var LoggerInterface */
+    protected $logger;
+
+    /**
+     * SoapClientTask constructor.
+     *
+     * @param LoggerInterface $logger
+     */
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * {@inheritdoc}
