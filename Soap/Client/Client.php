@@ -185,7 +185,7 @@ class Client implements ClientInterface
         $this->getLastRequestTrace();
 
         if (array_key_exists('trace', $this->getOptions()) && $this->getOptions()['trace']) {
-            $this->logger->notice(
+            $this->logger->debug(
                 sprintf("Trace of soap call '%s' on '%s'", $method, $this->wsdl),
                 $this->getLastRequestTraceArray()
             );
