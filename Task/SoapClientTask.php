@@ -19,10 +19,12 @@
 
 namespace CleverAge\ProcessSoapBundle\Task;
 
+use CleverAge\ProcessBundle\Configuration\TaskConfiguration;
 use CleverAge\ProcessBundle\Model\AbstractConfigurableTask;
 use CleverAge\ProcessBundle\Model\ProcessState;
 use CleverAge\ProcessSoapBundle\Soap\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -32,7 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @package CleverAge\ProcessSoapBundle\Task
  * @author  Madeline Veyrenc <mveyrenc@clever-age.com>
  */
-class SoapClientTask extends AbstractConfigurableTask
+class SoapClientTask extends AbstractConfigurableTask implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
@@ -77,9 +79,9 @@ class SoapClientTask extends AbstractConfigurableTask
                     $logContext['last_response_headers'] = $service->getLastResponseHeaders();
                     $this->logger->error('Empty resultset for query', $logContext);
 
-                    if ($options[self::ERROR_STRATEGY] === self::STRATEGY_SKIP) {
+                    if ($state->getTaskConfiguration()->getErrorStrategy() === TaskConfiguration::STRATEGY_SKIP) {
                         $state->setSkipped(true);
-                    } elseif ($options[self::ERROR_STRATEGY] === self::STRATEGY_STOP) {
+                    } elseif ($state->getTaskConfiguration()->getErrorStrategy() === TaskConfiguration::STRATEGY_STOP) {
                         $state->setStopped(true);
                     }
 
@@ -95,9 +97,9 @@ class SoapClientTask extends AbstractConfigurableTask
             $logContext['options'] = $options;
             $this->logger->error('Soap client service not found', $logContext);
 
-            if ($options[self::ERROR_STRATEGY] === self::STRATEGY_SKIP) {
+            if ($state->getTaskConfiguration()->getErrorStrategy() === TaskConfiguration::STRATEGY_SKIP) {
                 $state->setSkipped(true);
-            } elseif ($options[self::ERROR_STRATEGY] === self::STRATEGY_STOP) {
+            } elseif ($state->getTaskConfiguration()->getErrorStrategy() === TaskConfiguration::STRATEGY_STOP) {
                 $state->setStopped(true);
             }
         } catch (\Exception $e) {
@@ -105,9 +107,9 @@ class SoapClientTask extends AbstractConfigurableTask
             $logContext = $state->getLogContext();
             $logContext['options'] = $options;
             $this->logger->error($e->getMessage(), $logContext);
-            if ($options[self::ERROR_STRATEGY] === self::STRATEGY_SKIP) {
+            if ($state->getTaskConfiguration()->getErrorStrategy() === TaskConfiguration::STRATEGY_SKIP) {
                 $state->setSkipped(true);
-            } elseif ($options[self::ERROR_STRATEGY] === self::STRATEGY_STOP) {
+            } elseif ($state->getTaskConfiguration()->getErrorStrategy() === TaskConfiguration::STRATEGY_STOP) {
                 $state->stop($e);
             }
         }
@@ -115,10 +117,11 @@ class SoapClientTask extends AbstractConfigurableTask
 
     /**
      * {@inheritdoc}
+     * @throws \Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException
+     * @throws \Symfony\Component\OptionsResolver\Exception\AccessException
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
         $resolver->setRequired(
             [
                 'soap_client',

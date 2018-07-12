@@ -1,13 +1,20 @@
-parameters:
-    clever_age_soap_process.task.soap_client.class: CleverAge\ProcessSoapBundle\Task\SoapClientTask
-
 services:
-    clever_age_soap_process.task.soap_client:
-        class: "%clever_age_soap_process.task.soap_client.class%"
+    CleverAge\ProcessSoapBundle\Task\:
+        resource: '../../Task/*'
+        autowire: true
+        public: true
         shared: false
-        arguments:
-            - '@logger'
-        calls:
-            - ["setContainer", ["@service_container"]]
         tags:
             - { name: monolog.logger, channel: cleverage_process_task }
+
+    CleverAge\ProcessSoapBundle\Task\SoapClientTask:
+        autowire: true
+        public: true
+        shared: false
+        calls:
+            - method: 'setContainer'
+              arguments:
+                - '@service_container'
+        tags:
+            - { name: monolog.logger, channel: cleverage_process_task }
+

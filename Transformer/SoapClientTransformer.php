@@ -36,6 +36,13 @@ class SoapClientTransformer implements ConfigurableTransformerInterface
 
     /**
      * {@inheritdoc}
+     * @throws \Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException
+     * @throws \Symfony\Component\OptionsResolver\Exception\OptionDefinitionException
+     * @throws \Symfony\Component\OptionsResolver\Exception\NoSuchOptionException
+     * @throws \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
+     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws \Symfony\Component\OptionsResolver\Exception\AccessException
+     * @throws \RuntimeException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      * @throws \Symfony\Component\OptionsResolver\Exception\ExceptionInterface
@@ -55,7 +62,7 @@ class SoapClientTransformer implements ConfigurableTransformerInterface
             return $service->call($options['method'], $value);
         }
 
-        throw new \Exception('Soap client service not found');
+        throw new \RuntimeException('Soap client service not found');
     }
 
     /**
