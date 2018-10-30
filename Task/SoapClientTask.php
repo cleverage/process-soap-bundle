@@ -71,12 +71,14 @@ class SoapClientTask extends AbstractConfigurableTask implements ContainerAwareI
                 // Handle empty results
                 if (false === $result) {
 
-                    $logContext = $state->getLogContext();
-                    $logContext['options'] = $options;
-                    $logContext['last_request'] = $service->getLastRequest();
-                    $logContext['last_request_headers'] = $service->getLastRequestHeaders();
-                    $logContext['last_response'] = $service->getLastResponse();
-                    $logContext['last_response_headers'] = $service->getLastResponseHeaders();
+                    $logContext = [
+                        'options' => $options,
+                        'last_request' => $service->getLastRequest(),
+                        'last_request_headers' => $service->getLastRequestHeaders(),
+                        'last_response' => $service->getLastResponse(),
+                        'last_response_headers' => $service->getLastResponseHeaders(),
+                    ];
+
                     $this->logger->error('Empty resultset for query', $logContext);
 
                     if ($state->getTaskConfiguration()->getErrorStrategy() === TaskConfiguration::STRATEGY_SKIP) {
@@ -93,8 +95,7 @@ class SoapClientTask extends AbstractConfigurableTask implements ContainerAwareI
                 return;
             }
 
-            $logContext = $state->getLogContext();
-            $logContext['options'] = $options;
+            $logContext = ['options' => $options];
             $this->logger->error('Soap client service not found', $logContext);
 
             if ($state->getTaskConfiguration()->getErrorStrategy() === TaskConfiguration::STRATEGY_SKIP) {
@@ -104,8 +105,7 @@ class SoapClientTask extends AbstractConfigurableTask implements ContainerAwareI
             }
         } catch (\Exception $e) {
             $state->setError($state->getInput());
-            $logContext = $state->getLogContext();
-            $logContext['options'] = $options;
+            $logContext = ['options' => $options];
             $this->logger->error($e->getMessage(), $logContext);
             if ($state->getTaskConfiguration()->getErrorStrategy() === TaskConfiguration::STRATEGY_SKIP) {
                 $state->setSkipped(true);
