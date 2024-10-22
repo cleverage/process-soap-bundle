@@ -1,6 +1,9 @@
 CleverAge/ProcessSoapBundle
 ===========================
 
+This bundle is deprecated, use [CleverAge/SoapProcessBundle](https://github.com/cleverage/soap-process-bundle) instead
+
+
 This bundle extends the CleverAge/ProcessBundle to make Soap calls.
 
 ## Configuration reference
